@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  is_manager: false
+  auth_info: MyText
+  is_authorized: false
+  phone: MyString
+  encrypted_password: MyString
+  name: MyString
+
+two:
+  is_manager: false
+  auth_info: MyText
+  is_authorized: false
+  phone: MyString
+  encrypted_password: MyString
+  name: MyString

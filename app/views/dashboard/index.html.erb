@@ -1,0 +1,121 @@
+<div class='row'>
+  <div class='col-7'>
+    <div class='bd-callout bd-callout-info' style='margin-top:0;'>
+      <%= form_for @topic do |f| %>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <%= f.select :category, Topic::CATS, {include_blank: false}, class: "custom-select", disabled: !current_user.is_authorized? %>
+          </div>
+          <%= f.text_field :title, class: "form-control", placeholder: "标题", autocomplete: 'off', disabled: !current_user.is_authorized? %>
+        </div>
+        <div class="form-group">
+          <%= f.text_area :content, class: "form-control", placeholder: "话题内容...", rows: 4, disabled: !current_user.is_authorized? %>
+        </div>
+        <%= f.submit "发表新话题", class: "btn btn-primary", disabled: !current_user.is_authorized? %>
+        <% unless current_user.is_authorized? %>
+          <small class='help-text'>未认证用户不能发表话题。</small>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class='col-5'>
+    <%= render 'announcements/list', announcements: @announcements.first(3) %>
+  </div>
+
+  <div class='col-12'>
+    <ul class="list-group mb-3">
+      <div class="list-group-item list-group-item-secondary">社区话题</div>
+      <% @topics.each do |topic| %>
+        <a href="<%= topic_path(topic) %>" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <div class='lead'>
+              <span class="badge badge-pill badge-info"><%= topic.category %></span>
+              <%= topic.title %>
+            </div>
+            <small><%= time_ago_in_words(topic.created_at) %></small>
+          </div>
+          <small class='text-muted'><%= topic.content %></small>
+          <span class="badge badge-secondary badge-pill float-right"><%= topic.replies.count %></span>
+        </a>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<% if current_user.is_authorized? && !current_user.is_manager? %>
+  <hr />
+  <div class='row'>
+    <div class='col-7'>
+      <div class='bd-callout bd-callout-warning' style='margin-top:0;'>
+        <%= form_for @service_topic do |f| %>
+          <h4>联系管家</h4>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <%= f.select :category, Topic::ADMIN_CATS, {include_blank: false}, class: "custom-select" %>
+              </div>
+              <%= f.text_field :title, class: "form-control", placeholder: "投诉、建议、报修", autocomplete: 'off' %>
+            </div>
+            <%= f.text_area :content, class: "form-control", placeholder: "补充说明（可选）...", rows: 3 %>
+          </div>
+          <%= f.submit "提交服务单", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+    <div class='col-5'>
+      <div class="list-group">
+        <div class="list-group-item text-center list-group-item-secondary">
+          <strong>我的服务单</strong>
+        </div>
+        <% @my_service_topics.each do |topic| %>
+          <a href="javascript:void(0);" class="list-group-item list-group-item-action"  data-toggle="modal" data-target="#service_topic_<%= topic.id %>">
+
+            <div class="d-flex w-100 justify-content-between">
+              <span class="mb-1">
+                <span class="badge badge-pill badge-info"><%= topic.category %></span>
+                <%= topic.title %>
+              </span>
+              <small class='text-muted'><%= topic.replies.blank? ? "等待回复" : "已回复" %></small>
+            </div>
+          </a>
+          <div class="modal fade" id="service_topic_<%= topic.id %>" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalLabel"><%= topic.title %></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <%= simple_format topic.content %>
+
+                  <div class="list-group">
+                    <% topic.replies.each do |reply| %>
+                      <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                          <strong class="mb-1"><%= reply.user.name %>:</strong>
+                          <small><%= l reply.created_at %></small>
+                        </div>
+                        <p class="mb-1"><%= simple_format reply.content %></p>
+                      </div>
+                    <% end %>
+                    <% if topic.replies.count == 0 %>
+                      <div class="list-group-item list-group-item-light">
+                        暂时没有回复。
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

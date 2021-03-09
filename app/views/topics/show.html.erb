@@ -1,0 +1,75 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">社区主页</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @topic.category %></li>
+  </ol>
+</nav>
+
+<div class='row'>
+  <div class='col-9'>
+    <div class='callout' style='margin-top:0;'>
+      <h3><%= @topic.title %></h3>
+      <p>
+        <span><%= @topic.user.name %></span>
+        ·
+        <span class='text-muted'><%= l @topic.created_at %></span>
+      </p>
+      <%= simple_format @topic.content %>
+    </div>
+
+    <div class="list-group">
+      <% @replies.each do |reply| %>
+        <div class="list-group-item">
+          <div class="d-flex w-100 justify-content-between">
+            <strong class="mb-1"><%= reply.user.name %>:</strong>
+            <small><%= l reply.created_at %></small>
+          </div>
+          <p class="mb-1"><%= simple_format reply.content %></p>
+        </div>
+      <% end %>
+      <% if @replies.count == 0 %>
+        <div class="list-group-item list-group-item-light">
+          暂时没有回复。
+        </div>
+      <% end %>
+    </div>
+
+    <div class='callout'>
+      <%= form_for :reply, url: topic_add_reply_path(@topic) do |f| %>
+        <div class="form-group">
+          <%= f.text_area :content, class: "form-control", placeholder: "回复内容...", rows: 3, disabled: !current_user.is_authorized? %>
+        </div>
+        <%= f.submit "提交", class: "btn btn-primary", disabled: !current_user.is_authorized? %>
+        <% unless current_user.is_authorized? %>
+          <small class='help-text'>未认证用户不能发表回复。</small>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class='col-3'>
+    <div class='callout' style='margin-top:0;'>
+      <% user = @topic.user %>
+      <h5>
+        <%= user.name %>
+        <% if user.is_manager? %>
+          <small><%= user.auth_info %></small>
+        <% end %>
+      </h5>
+      <p class='text-muted'>
+        NO. <%= user.id %> / <%= l user.created_at, format: :date_only %>
+      </p>
+    </div>
+
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>近期发表话题</strong>
+      </li>
+      <% user.topics.each do |topic| %>
+        <a href="<%= topic_path(topic) %>" class="list-group-item list-group-item-action">
+          <%= topic.title %>
+        </a>
+      <% end %>
+    </ul>
+  </div>
+</div>

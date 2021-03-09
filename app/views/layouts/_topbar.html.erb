@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style='margin-bottom:15px;'>
+  <div class='container'>
+    <a class="navbar-brand" href="<%= root_path %>">社区生活管家</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <span class="navbar-text">
+        <% if user_signed_in? %>
+          <!-- current_user will return true if a user is logged in -->
+          <%= current_user.name %>
+          <small class='text-muted'>(<%= current_user.auth_info %><%= " - 待认证" unless current_user.is_authorized? %>)</small>
+
+          <% if user_signed_in? && current_user.is_manager? %>
+            <%= link_to "管理后台", management_path, class: "btn btn-outline-secondary btn-sm" %>
+          <% end %>
+
+          <%= link_to '退出', logout_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
+        <% else %>
+          <!-- not logged in -->
+          <%= link_to '登录', login_path %> 或 <%= link_to '注册', new_user_path %>
+        <% end %>
+      </span>
+    </div>
+  </div>
+</nav>

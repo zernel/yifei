@@ -1,0 +1,18 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">社区主页</a></li>
+    <li class="breadcrumb-item active" aria-current="page">小区通知</li>
+  </ol>
+</nav>
+
+<div class="list-group">
+  <% @announcements.each do |announcement| %>
+    <a href="<%= announcement_path(announcement) %>" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h4 class="mb-1"><%= announcement.title %></h4>
+        <small><%= time_ago_in_words(announcement.created_at) %></small>
+      </div>
+      <p class="mb-1"><%= simple_format announcement.content %></p>
+    </a>
+  <% end %>
+</div>

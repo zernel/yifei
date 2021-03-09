@@ -1,0 +1,31 @@
+<%= form_for @user, html: {class: "col-5"} do |f| %>
+  <fieldset>
+    <legend>注册新业主账号</legend>
+    <div class="form-group">
+      <%= f.label :phone, "手机号码" %>
+      <%= f.text_field :phone, autofocus: true, class: "form-control", autocomplete: 'off' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :name, '称呼' %>
+      <%= f.text_field :name, class: "form-control", autocomplete: 'off' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :auth_info, '物业地址' %>
+      <%= f.text_field :auth_info, class: "form-control", autocomplete: 'off' %>
+      <small class="form-text text-muted">注册成功后小区管家会进行认证。</small>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, '密码' %>
+      <%= f.password_field :password, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation, '确认密码' %>
+      <%= f.password_field :password_confirmation, class: "form-control" %>
+    </div>
+    <%= f.submit "注册", class: "btn btn-primary" %>
+  </fieldset>
+<% end %>

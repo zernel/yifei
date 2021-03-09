@@ -1,0 +1,12 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">社区主页</a></li>
+    <li class="breadcrumb-item active" aria-current="page">小区通知</li>
+  </ol>
+</nav>
+
+<h3><%= @announcement.title %></h3>
+
+<p class='lead'>
+  <%= simple_format @announcement.content %>
+</p>

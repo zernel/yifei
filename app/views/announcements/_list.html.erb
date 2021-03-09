@@ -1,0 +1,14 @@
+<div class="list-group">
+  <div class="list-group-item text-center list-group-item-secondary">
+    <strong>小区通知</strong>
+  </div>
+  <% announcements.each do |announcement| %>
+    <a href="<%= announcement_path(announcement) %>" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <span class="mb-1"><%= announcement.title %></span>
+        <small><%= l announcement.created_at, format: :date_only %></small>
+      </div>
+    </a>
+  <% end %>
+  <a class="list-group-item list-group-item-action text-center" href="<%= announcements_path %>">显示全部 (<%= Announcement.count %>)</a>
+</div>
